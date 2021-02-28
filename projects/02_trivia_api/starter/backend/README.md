@@ -66,29 +66,150 @@ One note before you delve into your tasks: for each endpoint you are expected to
 8. Create a POST endpoint to get questions to play the quiz. This endpoint should take category and previous question parameters and return a random questions within the given category, if provided, and that is not one of the previous questions. 
 9. Create error handlers for all expected errors including 400, 404, 422 and 500. 
 
-REVIEW_COMMENT
+## API Reference
+**GET** `\categories` </br>
+
+Fetches a JSON of available categories in the database.
+- Input args: None
+- Returns: JSON dict of categories with respective ID </br>
+Sample response:
 ```
-This README is missing documentation of your endpoints. Below is an example for your endpoint to get all categories. Please use it as a reference for creating your documentation and resubmit your code. 
-
-Endpoints
-GET '/categories'
-GET ...
-POST ...
-DELETE ...
-
-GET '/categories'
-- Fetches a dictionary of categories in which the keys are the ids and the value is the corresponding string of the category
-- Request Arguments: None
-- Returns: An object with a single key, categories, that contains a object of id: category_string key:value pairs. 
-{'1' : "Science",
-'2' : "Art",
-'3' : "Geography",
-'4' : "History",
-'5' : "Entertainment",
-'6' : "Sports"}
-
+{
+    "categories": {
+        "1": "Science",
+        "2": "Art",
+        "3": "Geography",
+        "4": "History",
+        "5": "Entertainment",
+        "6": "Sports"
+    },
+    "success": true
+}
+```
+**GET** `/questions` </br>
+Fetches all availabe questions in the database
+- Input args: None
+- Returns: JSON dict of cateories available and a list of dicts for each question.
+Sample response:
+```
+{
+    "categories": {
+        "1": "Science",
+        "2": "Art",
+        "3": "Geography",
+        "4": "History",
+        "5": "Entertainment",
+        "6": "Sports"
+    },
+    "current_category": null,
+    "questions": [
+        {
+            "answer": "Toronto",
+            "category": 3,
+            "difficulty": 1,
+            "id": 25,
+            "question": "What is the capital of Canada?"
+        },
 ```
 
+**DELETE** `/questions/<questions_id>`
+Delete a question bt its id </br>
+- Input args: (Int) question_id
+- Returns: Deleted question_id
+Sample response:
+```
+{
+  "deleted": "16", 
+  "success": true
+}
+```
+
+**POST** `/questions`
+Adds a new question to the databse 
+- Input: (dict) dictionary as {question:str, answer:str, difficulty:int, category:string}
+- Returns: (Int) new created ID question
+Sample Response:
+```
+{
+  "created": 18, 
+  "success": true
+}
+```
+**POST** `/questions/search`
+Fetch all questions that match the search term (case insenstitive)
+- Input: (str) {searchTerm:str}
+- Returns: (List) List of questions matching the search string
+Sample Response:
+```
+Input:
+{
+    "searchTerm": "What"
+}
+
+Output
+
+{
+  "current_category": null, 
+  "questions": [
+    {
+      "answer": "3.1415", 
+      "category": 2, 
+      "difficulty": 1, 
+      "id": 10, 
+      "question": "What is the number PI?"
+    }
+  ], 
+  "success": true, 
+  "total_questions": 1
+}
+```
+
+**GET** `/categories/<category_id>/questions` </br>
+Fetches a dictionary of questions for the specified category
+- Input: (Int) Category_id
+- Returns: (List)
+Sample Response:
+```
+{
+  "current_category": 1, 
+  "questions": [
+    {
+      "answer": "The Liver", 
+      "category": 1, 
+      "difficulty": 4, 
+      "id": 20, 
+      "question": "What is the heaviest organ in the human body?"
+    }, 
+    {
+      "answer": "Alexander Fleming", 
+      "category": 1, 
+      "difficulty": 3, 
+      "id": 21, 
+      "question": "Who discovered penicillin?"
+    }, 
+  ], 
+  "success": true, 
+  "total_questions": 2
+}
+```
+
+**POST** `/quizzes` 
+POST /quizzes Fetches one random question within a specified category. Previously asked questions are not asked again.
+- Input: {previous_questions: list, quiz_category: {id:Int, type:str}}
+- Returns: Question
+Sample Response:
+```
+{
+  "question": {
+    "answer": "The Liver", 
+    "category": 1, 
+    "difficulty": 4, 
+    "id": 20, 
+    "question": "What is the heaviest organ in the human body?"
+  }, 
+  "success": true
+}
+```
 
 ## Testing
 To run the tests, run
